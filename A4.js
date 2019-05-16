@@ -4,22 +4,23 @@ function Ball(x, y, radius, e, mass, colour){
 	this.e = -e; // has no units
 	this.mass = mass; //kg
 	this.radius = radius; //m
-	this.colour = colour; 
+	this.colour = colour;
 	this.area = (Math.PI * radius * radius) / 10000; //m^2
 }
 var canvas = null;
 var ctx = null;
 var fps = 1/60; //60 FPS
-var dt = fps * 1000; //ms 
-var timer = false;
-var Cd = 0.47;
-var rho = 1.22; //kg/m^3 
+var dt = fps * 1000; //ms
+
+var rho = 1.22; //kg/m^3
 var mouse = {x: 0, y:0, isDown: false};
 var width = 0;
 var height = 0;
 var balls = [];
 
-var setup = function(){
+//var setup = function(){
+
+function setUpCanvas(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 	width = canvas.width;
@@ -74,7 +75,7 @@ function loop(){
 			var ax = fx / balls[i].mass;
 			var ay = (9.81) + (fy / balls[i].mass);
 
-			//Calculating the ball velocity 
+			//Calculating the ball velocity
 			balls[i].velocity.x += ax * fps;
 			balls[i].velocity.y += ay * fps;
 
@@ -82,7 +83,7 @@ function loop(){
 			balls[i].position.x += balls[i].velocity.x * fps * 100;
 			balls[i].position.y += balls[i].velocity.y * fps * 100;
 		}
-		
+
 		//Rendering the ball
 		ctx.beginPath();
 		ctx.fillStyle = balls[i].colour;
@@ -91,11 +92,11 @@ function loop(){
 		ctx.closePath();
 
 		//Handling the ball collisions
-		collisionWall(balls[i]);	
+		collisionWall(balls[i]);
 	}
 
 }
-	
+
 function collisionWall(ball){
 	if(ball.position.y > height - ball.radius){
 		ball.velocity.y *= ball.e;
