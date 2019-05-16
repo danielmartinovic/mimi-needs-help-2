@@ -59,8 +59,6 @@ function getMousePosition(e){
 }
 
 function loop(){
-	//create constants
-	var gravity = document.getElementById("gravity");
 
 	//Clear window at the begining of every frame
 	ctx.clearRect(0, 0, width, height);
@@ -76,7 +74,7 @@ function loop(){
 			//Calculating the accleration of the ball
 			//F = ma or a = F/m
 			var ax = fx / balls[i].mass;
-			var ay = (ag * gravity.value) + (fy / balls[i].mass);
+			var ay = (ag * 3) + (fy / balls[i].mass);
 
 			//Calculating the ball velocity 
 			balls[i].velocity.x += ax * fps;
