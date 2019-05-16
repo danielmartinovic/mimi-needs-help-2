@@ -28,7 +28,6 @@ var setup = function(){
 
 	canvas.onmousedown = mouseDown;
 	canvas.onmouseup = mouseUp;
-	canvas.onmousemove = getMousePosition;
 	timer = setInterval(loop, dt);
 }
 
@@ -92,14 +91,6 @@ function loop(){
 		ctx.fill();
 		ctx.closePath();
 
-		if(mouse.isDown){
-			ctx.beginPath();
-			ctx.strokeStyle = "rgb(0,255,0)";
-			ctx.moveTo(balls[balls.length - 1].position.x, balls[balls.length - 1].position.y);
-			ctx.lineTo(mouse.x, mouse.y);
-			ctx.stroke();
-			ctx.closePath();
-		}
 		//Handling the ball collisions
 		collisionWall(balls[i]);	
 	}
