@@ -15,7 +15,6 @@ var timer = false;
 var Cd = 0.47;
 var rho = 1.22; //kg/m^3 
 var mouse = {x: 0, y:0, isDown: false};
-var ag = 9.81; //m/s^2 acceleration due to gravity on earth = 9.81 m/s^2. 
 var width = 0;
 var height = 0;
 var balls = [];
@@ -73,7 +72,7 @@ function loop(){
 			//Calculating the accleration of the ball
 			//F = ma or a = F/m
 			var ax = fx / balls[i].mass;
-			var ay = (ag * 3) + (fy / balls[i].mass);
+			var ay = (9.81) + (fy / balls[i].mass);
 
 			//Calculating the ball velocity 
 			balls[i].velocity.x += ax * fps;
