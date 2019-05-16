@@ -61,8 +61,6 @@ function getMousePosition(e){
 function loop(){
 	//create constants
 	var gravity = document.getElementById("gravity");
-	var density = document.getElementById("density");
-	var drag = document.getElementById("drag");
 
 	//Clear window at the begining of every frame
 	ctx.clearRect(0, 0, width, height);
@@ -70,8 +68,8 @@ function loop(){
 		if(!mouse.isDown || i != balls.length - 1){
 			//physics - calculating the aerodynamic forces to drag
 			// -0.5 * Cd * A * v^2 * rho
-			var fx = -0.5 * drag.value * density.value * balls[i].area * balls[i].velocity.x * balls[i].velocity.x * (balls[i].velocity.x / Math.abs(balls[i].velocity.x));
-			var fy = -0.5 * drag.value * density.value * balls[i].area * balls[i].velocity.y * balls[i].velocity.y * (balls[i].velocity.y / Math.abs(balls[i].velocity.y));
+			var fx = -0.5 * balls[i].area * balls[i].velocity.x * balls[i].velocity.x * (balls[i].velocity.x / Math.abs(balls[i].velocity.x));
+			var fy = -0.5 * balls[i].area * balls[i].velocity.y * balls[i].velocity.y * (balls[i].velocity.y / Math.abs(balls[i].velocity.y));
 
 			fx = (isNaN(fx)? 0 : fx);
 			fy = (isNaN(fy)? 0 : fy);
@@ -106,77 +104,14 @@ function loop(){
 			ctx.closePath();
 		}
 		//Handling the ball collisions
-		collisionBall(balls[i]);
 		collisionWall(balls[i]);	
 	}
 
-	//Rendering Text
-	ctx.fillStyle = 'white';
-	ctx.font = "11pt Ariel";
-	ctx.fillText("Number of Balls: " + balls.length, 0, 16);
-	ctx.fillText("Drag Coefficient: " + drag.value, 0, 32);
-	ctx.fillText("Fluid Density: " + density.value + " kg/m^3", 0, 48);
-	ctx.fillText("Acceleration due to gravity: " + gravity.value + " g", 0, 64);
-	ctx.fillText("Room Width: " + width / 1000 + " m", 0, 80);
-	ctx.fillText("Room Height: " + height / 1000 + " m", 0, 96);
 }
 	
 function collisionWall(ball){
-	if(ball.position.x > width - ball.radius){
-		ball.velocity.x *= ball.e;
-		ball.position.x = width - ball.radius;
-	}
 	if(ball.position.y > height - ball.radius){
 		ball.velocity.y *= ball.e;
 		ball.position.y = height - ball.radius;
-	}
-	if(ball.position.x < ball.radius){
-		ball.velocity.x *= ball.e;
-		ball.position.x = ball.radius;
-	}
-	if(ball.position.y < ball.radius){
-		ball.velocity.y *= ball.e;
-		ball.position.y = ball.radius;
-	}
-}
-function collisionBall(b1){
-	for(var i = 0; i < balls.length; i++){
-		var b2 = balls[i];
-		if(b1.position.x != b2.position.x && b1.position.y != b2.position.y){
-			//quick check for potential collisions using AABBs
-			if(b1.position.x + b1.radius + b2.radius > b2.position.x
-				&& b1.position.x < b2.position.x + b1.radius + b2.radius
-				&& b1.position.y + b1.radius + b2.radius > b2.position.y
-				&& b1.position.y < b2.position.y + b1.radius + b2.radius){
-				
-				//pythagoras 
-				var distX = b1.position.x - b2.position.x;
-				var distY = b1.position.y - b2.position.y;
-				var d = Math.sqrt((distX) * (distX) + (distY) * (distY));
-	
-				//checking circle vs circle collision 
-				if(d < b1.radius + b2.radius){
-					var nx = (b2.position.x - b1.position.x) / d;
-					var ny = (b2.position.y - b1.position.y) / d;
-					var p = 2 * (b1.velocity.x * nx + b1.velocity.y * ny - b2.velocity.x * nx - b2.velocity.y * ny) / (b1.mass + b2.mass);
-
-					// calulating the point of collision 
-					var colPointX = ((b1.position.x * b2.radius) + (b2.position.x * b1.radius)) / (b1.radius + b2.radius);
-					var colPointY = ((b1.position.y * b2.radius) + (b2.position.y * b1.radius)) / (b1.radius + b2.radius);
-					
-					//stoping overlap 
-					b1.position.x = colPointX + b1.radius * (b1.position.x - b2.position.x) / d;
-					b1.position.y = colPointY + b1.radius * (b1.position.y - b2.position.y) / d;
-					b2.position.x = colPointX + b2.radius * (b2.position.x - b1.position.x) / d;
-					b2.position.y = colPointY + b2.radius * (b2.position.y - b1.position.y) / d;
-
-					//updating velocity to reflect collision 
-					b1.velocity.x -= p * b1.mass * nx;
-					b1.velocity.y -= p * b1.mass * ny;
-					b2.velocity.x += p * b2.mass * nx;
-					b2.velocity.y += p * b2.mass * ny;
-				}
-			}
-		}
 	}
 }
